@@ -33,9 +33,11 @@ a{color:inherit}
 .lead{font:400 17px/1.55 var(--font);color:var(--text2);max-width:33ch;margin:0 0 24px}
 .prose{font:400 16.5px/1.62 var(--font);letter-spacing:-.01em;margin:0 0 20px}
 .prose b{font-weight:610}
-.video{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#141316;margin:0 0 26px}
+.video{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#141316 url(files/cover.jpg) center/cover;margin:0 0 10px}
+.video:active{transform:scale(.985)}
+.hint{font:400 12.5px/1.4 var(--font);color:var(--muted);margin:0 0 26px}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.video .soon{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:10px;color:rgba(248,245,241,.6);font:500 13.5px var(--font)}
+.video .soon{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:10px;color:rgba(248,245,241,.92);font:500 14px var(--font);background:rgba(20,19,22,.45)}
 .video .soon i{width:52px;height:52px;border-radius:50%;background:rgba(248,245,241,.14);display:grid;place-items:center}
 .note{background:var(--note);border-radius:12px;padding:17px 18px 7px;margin:0 0 26px}
 .note .kicker{margin-bottom:12px}
@@ -77,7 +79,9 @@ a{color:inherit}
 <script>
 // ponytail: доступ не проверяем, страницу открывает бот после оплаты. Если ссылка утечёт, видно тексты и ссылки на видео; закрыть можно проверкой initData на сервере бота.
 const FIL = 'https://t.me/Seven_su'
-const BOT = 'https://t.me/klipslovami_bot'   // поменять на ник бота продаж
+const BOT = 'https://t.me/klipslovami_bot'
+const CH = 'https://t.me/c/4477554381/'   // закрытый канал с видео: пускает только тех, кто оплатил
+const POSTS = {1:5, 2:6, 3:7, 4:8, 5:9, 6:10}   // номер урока -> id поста в канале, урок 7 добавить после записи
 const L = [
  {t:'Как я слил подписку за вечер', m:7, vk:'',
   intro:'Начинаем с моего провала. Я хотел снять клип за один вечер, закинул всё в Seedance одним промптом и слил половину кредитов. Посмотри, чтобы не платить за эту ошибку самому.',
@@ -144,7 +148,8 @@ function render(){
    <button class="action" data-go="1">${lessonsDone() ? 'Продолжить' : 'Начать с урока 1'}<i>${arrow}</i></button>`
  } else if (p <= L.length){
   const i = p - 1, l = L[i]
-  const video = l.vk ? `<div class="video"><iframe src="${l.vk}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`
+  const post = POSTS[i + 1]
+  const video = post ? `<button class="video" data-link="${CH}${post}"><div class="soon"><i><svg width="18" height="20" viewBox="0 0 20 22"><path d="M3 2l15 9-15 9z" fill="currentColor"/></svg></i>Смотреть урок · ${l.m} мин</div></button><p class="hint">Откроется в закрытом канале с уроками. Вернёшься сюда одним свайпом</p>`
                      : `<div class="video"><div class="soon"><i><svg width="18" height="20" viewBox="0 0 20 22"><path d="M3 2l15 9-15 9z" fill="currentColor"/></svg></i>Видео появится здесь</div></div>`
   const checks = l.after.map((a, j) => { const on = S.done[i + '.' + j]; const txt = /Пришли мне/.test(a) ? `<a href="${FIL}" data-link="${FIL}">${a}</a>` : a
     return `<button class="chk${on ? ' on' : ''}" data-chk="${i}.${j}"><i>${on ? check : ''}</i><span>${txt}</span></button>` }).join('')
