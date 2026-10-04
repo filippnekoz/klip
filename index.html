@@ -90,8 +90,9 @@ body.up .mark,body.up .burger,body.up .dots{transform:translateY(-120px);opacity
 <div id="screen"></div>
 <script>
 // ponytail: доступ не проверяем, страницу открывает бот после оплаты. Если ссылка утечёт, видно тексты и ссылки на видео; закрыть можно проверкой initData на сервере бота.
-const FIL = 'https://t.me/klipslovami_bot?start=lead_q'   // через бота: Филу сразу приходит, кто и зачем пишет
-const LEAD = k => 'https://t.me/klipslovami_bot?start=lead_' + k
+const LEADS = { setup: 'Настройка за 15 000 ₽', clip: 'Твой клип со мной за 50 000 ₽', order: 'Клип под заказ от 100 000 ₽', show: 'показать свой клип', q: 'вопрос по гайду' }
+const LEAD = k => 'https://t.me/Seven_su?text=' + encodeURIComponent('Привет! Я из гайда «Клип словами», ' + (k === 'show' ? 'хочу показать свой клип' : k === 'q' ? 'есть вопрос' : 'интересует: ' + LEADS[k]))   // сразу чат с Филом, сообщение уже набрано
+const FIL = LEAD('q')
 const BOT = 'https://t.me/klipslovami_bot'
 const CH = 'https://t.me/c/4477554381/'   // закрытый канал: скилл и новости для тех, кто оплатил
 const VK = {1: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239017&hash=460ebc1865a08bf6', 2: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239018&hash=2f73c375f2ebd4bf', 3: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239019&hash=64c6fa855fd726ff', 4: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239020&hash=e22358ec86a5c7e1', 5: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239021&hash=e7aa7dbcb9063f65', 6: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239022&hash=80c9fb335b4dc343'}   // плееры VK «по ссылке», урок 7 добавить после записи
