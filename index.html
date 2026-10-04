@@ -90,7 +90,8 @@ body.up .mark,body.up .burger,body.up .dots{transform:translateY(-120px);opacity
 <div id="screen"></div>
 <script>
 // ponytail: доступ не проверяем, страницу открывает бот после оплаты. Если ссылка утечёт, видно тексты и ссылки на видео; закрыть можно проверкой initData на сервере бота.
-const FIL = 'https://t.me/Seven_su'
+const FIL = 'https://t.me/klipslovami_bot?start=lead_q'   // через бота: Филу сразу приходит, кто и зачем пишет
+const LEAD = k => 'https://t.me/klipslovami_bot?start=lead_' + k
 const BOT = 'https://t.me/klipslovami_bot'
 const CH = 'https://t.me/c/4477554381/'   // закрытый канал: скилл и новости для тех, кто оплатил
 const VK = {1: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239017&hash=460ebc1865a08bf6', 2: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239018&hash=2f73c375f2ebd4bf', 3: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239019&hash=64c6fa855fd726ff', 4: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239020&hash=e22358ec86a5c7e1', 5: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239021&hash=e7aa7dbcb9063f65', 6: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239022&hash=80c9fb335b4dc343'}   // плееры VK «по ссылке», урок 7 добавить после записи
@@ -169,7 +170,7 @@ function render(){
   const v = VK[i + 1]
   const video = v ? `<div class="video"><iframe src="${v}&hd=2&js_api=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock" allowfullscreen loading="lazy"></iframe></div>`
                      : `<div class="video"><div class="soon"><i><svg width="18" height="20" viewBox="0 0 20 22"><path d="M3 2l15 9-15 9z" fill="currentColor"/></svg></i>Видео появится здесь</div></div>`
-  const checks = l.after.map((a, j) => { const on = S.done[i + '.' + j]; const txt = /пришли мне/i.test(a) && a.startsWith('Или') ? `<a href="${FIL}" data-link="${FIL}">${a}</a>` : a
+  const checks = l.after.map((a, j) => { const on = S.done[i + '.' + j]; const txt = /пришли мне/i.test(a) && a.startsWith('Или') ? `<a href="${LEAD('show')}" data-link="${LEAD('show')}">${a}</a>` : a
     return `<button class="chk${on ? ' on' : ''}" data-chk="${i}.${j}"><i>${on ? check : ''}</i><span>${txt}</span></button>` }).join('')
   const next = i + 1 < L.length ? `Дальше: урок ${i + 2}` : 'Завершить гайд'
   h = `<div class="kicker">Урок ${i + 1} из ${L.length} · ${l.m} мин</div>
@@ -185,7 +186,7 @@ function render(){
    <div class="title">Ты прошёл\nвесь путь.</div>
    <p class="lead">Режиссёр стоит, первый клип собран. Выкладывай его и показывай мне.</p>
    <p class="prose">Пришли мне, что получилось. Самые сильные работы покажу у себя в канале.</p>
-   <button class="action" data-link="${FIL}">Написать Филу<i>${arrow}</i></button>
+   <button class="action" data-link="${LEAD('show')}">Написать Филу<i>${arrow}</i></button>
    <p class="prose" style="margin-top:22px">Хочешь как в моём клипе, с переходами, субтитрами и моушном? Соберём твой клип вместе на наставничестве.</p>
    <button class="secondary" data-offers="1">Узнать про наставничество</button>`
  }
@@ -210,13 +211,13 @@ function openFile(k){
 }
 
 const OFFERS = [
- ['Настройка', '15 000 ₽', 'Созвон на 2 часа: ставлю всё на твой компьютер, и вместе генерим первые сцены твоего клипа.', 'Хочу «Настройку» за 15 000'],
- ['Твой клип со мной', '50 000 ₽', 'Делаем весь ролик вместе: 3-4 недели, 4 созвона и чат. От идеи до финала, с переходами, текстом и моушном.', 'Хочу «Твой клип со мной» за 50 000'],
- ['Клип под заказ', 'от 100 000 ₽', 'Для артиста или бренда: идея, сценарий, сцены, монтаж. Я делаю всё сам, генерации отдельно.', 'Хочу клип под заказ']]
+ ['Настройка', '15 000 ₽', 'Созвон на 2 часа: ставлю всё на твой компьютер, и вместе генерим первые сцены твоего клипа.', 'setup'],
+ ['Твой клип со мной', '50 000 ₽', 'Делаем весь ролик вместе: 3-4 недели, 4 созвона и чат. От идеи до финала, с переходами, текстом и моушном.', 'clip'],
+ ['Клип под заказ', 'от 100 000 ₽', 'Для артиста или бренда: идея, сценарий, сцены, монтаж. Я делаю всё сам, генерации отдельно.', 'order']]
 function offers(){
  haptic('sel'); const o = document.createElement('div'); o.className = 'overlay'; const s = document.createElement('div'); s.className = 'sheet'
  s.innerHTML = '<div class="grab"></div><div class="kicker" style="margin-bottom:8px">Следующий шаг</div><div class="title" style="font-size:32px;margin:6px 0 18px">Хочешь как<br>в моём клипе?</div>'
-   + OFFERS.map(([t, m, d, msg]) => `<div class="offer"><div class="t">${t}</div><div class="m">${m}</div><p>${d}</p><button class="action" data-link="${FIL}?text=${encodeURIComponent(msg)}">Написать Филу<i>${arrow}</i></button></div>`).join('')
+   + OFFERS.map(([t, m, d, msg]) => `<div class="offer"><div class="t">${t}</div><div class="m">${m}</div><p>${d}</p><button class="action" data-link="${LEAD(msg)}">Написать Филу<i>${arrow}</i></button></div>`).join('')
  const shut = () => { o.remove(); s.remove() }
  o.onclick = shut; s.addEventListener('click', e => { if (e.target.closest('[data-link]')) setTimeout(shut, 0) })
  document.body.append(o, s)
