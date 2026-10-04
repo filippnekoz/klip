@@ -8,11 +8,11 @@
 /* Стиль один в один из iter-miniapp (src/index.css): токены, SF-шрифт, kicker/заголовок/лид, кнопка-строка со стрелкой, точки онбординга, шит. */
 :root{--bg:#F6F4F1;--bg-alt:#E9E5E2;--surface:rgba(255,255,255,.45);--surface-solid:#F6F3F0;--line:rgba(160,155,145,.16);--line-strong:rgba(160,155,145,.28);
 --text:rgba(31,31,36,.9);--text2:rgba(31,31,36,.5);--muted:rgba(31,31,36,.32);--icon:rgba(31,31,36,.5);--ink:#2b2723;--ink-text:#F4F1EA;--overlay:rgba(31,31,36,.28);--sheet:#F6F3F0;
---lav:#a28bbd;--note:#fcfaf7;--r-btn:#141316;--r-btn-fg:#f8f5f1;--r-t2:rgba(41,39,45,.56);--dots-bg:rgba(246,244,241,.74);--dot:rgba(31,31,36,.14);--dot-on:rgba(31,31,36,.68);
+--sun:#FFD400;--note:#fcfaf7;--r-btn:#141316;--r-btn-fg:#f8f5f1;--r-t2:rgba(41,39,45,.56);--dots-bg:rgba(246,244,241,.74);--dot:rgba(31,31,36,.14);--dot-on:rgba(31,31,36,.68);
 --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;--display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;--ease:cubic-bezier(.4,0,.2,1);color-scheme:light}
 @media (prefers-color-scheme:dark){:root{--bg:#17161A;--bg-alt:#1E1D21;--surface:rgba(255,255,255,.05);--surface-solid:#232227;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.15);
 --text:rgba(245,242,236,.92);--text2:rgba(245,242,236,.55);--muted:rgba(245,242,236,.4);--icon:rgba(245,242,236,.6);--ink:#EEEAE4;--ink-text:#1A1917;--overlay:rgba(0,0,0,.55);--sheet:#232227;
---lav:#b3a0d8;--note:#242426;--r-btn:#f1ede7;--r-btn-fg:#1a1917;--r-t2:rgba(245,242,236,.55);--dots-bg:rgba(23,22,26,.74);--dot:rgba(245,242,236,.16);--dot-on:rgba(245,242,236,.8);color-scheme:dark}}
+--sun:#FFD400;--note:#242426;--r-btn:#f1ede7;--r-btn-fg:#1a1917;--r-t2:rgba(245,242,236,.55);--dots-bg:rgba(23,22,26,.74);--dot:rgba(245,242,236,.16);--dot-on:rgba(245,242,236,.8);color-scheme:dark}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{position:fixed;inset:0;overflow:hidden;overscroll-behavior:none;height:100%;margin:0;background:var(--bg);color:var(--text)}
 body{font:15px/1.55 var(--font);letter-spacing:-.005em;-webkit-font-smoothing:antialiased}
@@ -74,7 +74,7 @@ a{color:inherit}
 .close{position:fixed;z-index:31;right:14px;top:calc(var(--tg-safe-top,12px) + 4px);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface-solid);color:var(--text2);box-shadow:inset 0 0 0 1px var(--line)}
 .offer{background:var(--note);border-radius:14px;padding:18px 18px 4px;margin:0 0 12px}
 .offer .t{font:520 21px/1.2 var(--display);letter-spacing:-.03em;margin:0 0 4px}
-.offer .m{font:600 15px var(--font);color:var(--lav);margin:0 0 8px;font-variant-numeric:tabular-nums}
+.offer .m{display:inline-block;font:700 15px var(--font);color:#141316;background:var(--sun);border-radius:999px;padding:3px 11px;margin:2px 0 10px;font-variant-numeric:tabular-nums}
 .offer p{font:400 15px/1.5 var(--font);color:var(--text2);margin:0 0 6px}
 .offer .action{margin:6px 0 4px;min-height:52px;border-bottom:0}
 .toast{position:fixed;z-index:40;left:50%;bottom:calc(var(--tg-safe-bottom,0px) + 28px);transform:translateX(-50%);background:var(--r-btn);color:var(--r-btn-fg);padding:10px 16px;border-radius:999px;font:500 14px var(--font)}
