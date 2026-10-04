@@ -91,13 +91,13 @@ body.up .mark,body.up .burger,body.up .dots{transform:translateY(-120px);opacity
 <script>
 // ponytail: доступ не проверяем, страницу открывает бот после оплаты. Если ссылка утечёт, видно тексты и ссылки на видео; закрыть можно проверкой initData на сервере бота.
 const LEADS = {
- setup: 'Фил, привет! Прошёл «Клип словами» и хочу настроечку от мастера за 15к 🛠',
- clip: 'Фил, привет! Хочу снять свой клип вместе с тобой, тот самый за 50к 🎬',
- order: 'Фил, привет! Есть идея для клипа под заказ, давай обсудим 🔥',
- show: 'Фил, смотри, что я наснимал по твоему гайду 👀',
+ setup: 'Привет! Прошёл «Клип словами» и хочу настроечку от мастера за 15к 🛠',
+ clip: 'Привет! Хочу снять свой клип вместе с тобой, тот самый за 50к 🎬',
+ order: 'Привет! Есть идея для клипа под заказ, давай обсудим 🔥',
+ show: 'Привет! Смотри, что я наснимал по твоему гайду 👀',
  q: 'Фил, привет! Я из «Клип словами», есть вопросик 🙌' }
 const LEAD = k => 'https://t.me/Seven_su?text=' + encodeURIComponent(LEADS[k])   // сразу чат с Филом, сообщение уже набрано
-const FIL = LEAD('q')
+const FIL = 'https://t.me/klipslovami_bot?start=support'   // вопросы: отвечает помощник в боте, Фил только по делу
 const BOT = 'https://t.me/klipslovami_bot'
 const CH = 'https://t.me/c/4477554381/'   // закрытый канал: скилл и новости для тех, кто оплатил
 const VK = {1: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239017&hash=460ebc1865a08bf6', 2: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239018&hash=2f73c375f2ebd4bf', 3: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239019&hash=64c6fa855fd726ff', 4: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239020&hash=e22358ec86a5c7e1', 5: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239021&hash=e7aa7dbcb9063f65', 6: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239022&hash=80c9fb335b4dc343'}   // плееры VK «по ссылке», урок 7 добавить после записи
@@ -233,7 +233,7 @@ function menu(){
  s.innerHTML = '<div class="grab"></div><h3>Уроки</h3>' + L.map((l, i) =>
    `<button class="row${S.pos === i + 1 ? ' cur' : ''}" data-jump="${i + 1}"><span class="n">${i + 1}</span><span class="nm">${l.t}<small>${l.m} мин</small></span>${S.done[i] ? '<span class="tick">' + check + '</span>' : chev}</button>`).join('')
    + '<h3>Материалы</h3>' + ['skill', 'chto-gde', 'chto-zagruzhat', 'prompt'].map(fileRow).join('')
-   + `<h3>Связь</h3><button class="row" data-offers="1"><span class="nm">Наставничество и клип под заказ<small>15 000, 50 000 и от 100 000 ₽</small></span>${chev}</button><button class="row" data-link="${FIL}"><span class="nm">Задать вопрос Филу<small>отвечаю сам, в личке</small></span>${chev}</button>`
+   + `<h3>Связь</h3><button class="row" data-offers="1"><span class="nm">Наставничество и клип под заказ<small>15 000, 50 000 и от 100 000 ₽</small></span>${chev}</button><button class="row" data-link="${FIL}"><span class="nm">Задать вопрос<small>помощник Фила в боте ответит сразу</small></span>${chev}</button>`
  const shut = () => { o.remove(); s.remove() }
  o.onclick = shut; s.addEventListener('click', e => { if (e.target.closest('[data-jump],[data-file],[data-link]')) setTimeout(shut, 0) })
  document.body.append(o, s)
