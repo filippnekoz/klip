@@ -72,6 +72,11 @@ a{color:inherit}
 .viewer img{width:100%;border-radius:10px;display:block}
 .viewer pre{white-space:pre-wrap;font:400 14.5px/1.55 var(--font);margin:0}
 .close{position:fixed;z-index:31;right:14px;top:calc(var(--tg-safe-top,12px) + 4px);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface-solid);color:var(--text2);box-shadow:inset 0 0 0 1px var(--line)}
+.offer{background:var(--note);border-radius:14px;padding:18px 18px 4px;margin:0 0 12px}
+.offer .t{font:520 21px/1.2 var(--display);letter-spacing:-.03em;margin:0 0 4px}
+.offer .m{font:600 15px var(--font);color:var(--lav);margin:0 0 8px;font-variant-numeric:tabular-nums}
+.offer p{font:400 15px/1.5 var(--font);color:var(--text2);margin:0 0 6px}
+.offer .action{margin:6px 0 4px;min-height:52px;border-bottom:0}
 .toast{position:fixed;z-index:40;left:50%;bottom:calc(var(--tg-safe-bottom,0px) + 28px);transform:translateX(-50%);background:var(--r-btn);color:var(--r-btn-fg);padding:10px 16px;border-radius:999px;font:500 14px var(--font)}
 .mark,.burger,.dots{transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .28s}
 body.up .mark,body.up .burger,body.up .dots{transform:translateY(-120px);opacity:0;pointer-events:none}
@@ -182,7 +187,7 @@ function render(){
    <p class="prose">Пришли мне, что получилось. Самые сильные работы покажу у себя в канале.</p>
    <button class="action" data-link="${FIL}">Написать Филу<i>${arrow}</i></button>
    <p class="prose" style="margin-top:22px">Хочешь как в моём клипе, с переходами, субтитрами и моушном? Соберём твой клип вместе на наставничестве.</p>
-   <button class="secondary" data-link="${FIL}">Узнать про наставничество</button>`
+   <button class="secondary" data-offers="1">Узнать про наставничество</button>`
  }
  el.innerHTML = '<div class="page">' + h + '</div>'; el.scrollTop = 0; lastY = 0; document.body.classList.remove('up'); dots()
 }
@@ -204,19 +209,32 @@ function openFile(k){
  document.body.append(v, close)
 }
 
+const OFFERS = [
+ ['Настройка', '15 000 ₽', 'Созвон на 2 часа: ставлю всё на твой компьютер, и вместе генерим первые сцены твоего клипа.', 'Хочу «Настройку» за 15 000'],
+ ['Твой клип со мной', '50 000 ₽', 'Делаем весь ролик вместе: 3-4 недели, 4 созвона и чат. От идеи до финала, с переходами, текстом и моушном.', 'Хочу «Твой клип со мной» за 50 000'],
+ ['Клип под заказ', 'от 100 000 ₽', 'Для артиста или бренда: идея, сценарий, сцены, монтаж. Я делаю всё сам, генерации отдельно.', 'Хочу клип под заказ']]
+function offers(){
+ haptic('sel'); const o = document.createElement('div'); o.className = 'overlay'; const s = document.createElement('div'); s.className = 'sheet'
+ s.innerHTML = '<div class="grab"></div><div class="kicker" style="margin-bottom:8px">Следующий шаг</div><div class="title" style="font-size:32px;margin:6px 0 18px">Хочешь как<br>в моём клипе?</div>'
+   + OFFERS.map(([t, m, d, msg]) => `<div class="offer"><div class="t">${t}</div><div class="m">${m}</div><p>${d}</p><button class="action" data-link="${FIL}?text=${encodeURIComponent(msg)}">Написать Филу<i>${arrow}</i></button></div>`).join('')
+ const shut = () => { o.remove(); s.remove() }
+ o.onclick = shut; s.addEventListener('click', e => { if (e.target.closest('[data-link]')) setTimeout(shut, 0) })
+ document.body.append(o, s)
+}
 function menu(){
  haptic('sel'); const o = document.createElement('div'); o.className = 'overlay'; const s = document.createElement('div'); s.className = 'sheet'
  s.innerHTML = '<div class="grab"></div><h3>Уроки</h3>' + L.map((l, i) =>
    `<button class="row${S.pos === i + 1 ? ' cur' : ''}" data-jump="${i + 1}"><span class="n">${i + 1}</span><span class="nm">${l.t}<small>${l.m} мин</small></span>${S.done[i] ? '<span class="tick">' + check + '</span>' : chev}</button>`).join('')
    + '<h3>Материалы</h3>' + ['skill', 'chto-gde', 'chto-zagruzhat', 'prompt'].map(fileRow).join('')
-   + `<h3>Связь</h3><button class="row" data-link="${FIL}"><span class="nm">Задать вопрос Филу<small>отвечаю сам, в личке</small></span>${chev}</button>`
+   + `<h3>Связь</h3><button class="row" data-offers="1"><span class="nm">Наставничество и клип под заказ<small>15 000, 50 000 и от 100 000 ₽</small></span>${chev}</button><button class="row" data-link="${FIL}"><span class="nm">Задать вопрос Филу<small>отвечаю сам, в личке</small></span>${chev}</button>`
  const shut = () => { o.remove(); s.remove() }
  o.onclick = shut; s.addEventListener('click', e => { if (e.target.closest('[data-jump],[data-file],[data-link]')) setTimeout(shut, 0) })
  document.body.append(o, s)
 }
 
 document.addEventListener('click', e => {
- const b = e.target.closest('[data-go],[data-chk],[data-file],[data-link],[data-jump]'); if (!b) return
+ const b = e.target.closest('[data-go],[data-chk],[data-file],[data-link],[data-jump],[data-offers]'); if (!b) return
+ if (b.dataset.offers) { e.preventDefault(); document.querySelector('.sheet') && document.querySelectorAll('.sheet,.overlay').forEach(x => x.remove()); return offers() }
  e.preventDefault()
  if (b.dataset.link) return openLink(b.dataset.link)
  if (b.dataset.file) return openFile(b.dataset.file)
