@@ -47,6 +47,9 @@ a{color:inherit}
 .chk.on span{color:var(--text2)}
 .chk a{border-bottom:1px solid var(--line-strong);text-decoration:none}
 .files{display:flex;flex-direction:column;margin:0 0 22px;border-top:1px solid var(--line)}
+.sheetimg{width:100%;border-radius:10px;display:block;margin:0 0 6px;box-shadow:0 0 0 1px var(--line)}
+.prompt{white-space:pre-wrap;font:400 14px/1.55 var(--font);margin:0 0 10px}
+.secondary{margin:0 0 26px}
 .row{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 0;border-bottom:1px solid var(--line);width:100%;text-align:left}
 .row .nm{flex:1;min-width:0;font:400 16px/1.35 var(--font);letter-spacing:-.024em}
 .row .nm small{display:block;font:400 13px/1.35 var(--font);color:var(--text2);letter-spacing:-.005em}
@@ -69,6 +72,9 @@ a{color:inherit}
 .viewer pre{white-space:pre-wrap;font:400 14.5px/1.55 var(--font);margin:0}
 .close{position:fixed;z-index:31;right:14px;top:calc(var(--tg-safe-top,12px) + 4px);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface-solid);color:var(--text2);box-shadow:inset 0 0 0 1px var(--line)}
 .toast{position:fixed;z-index:40;left:50%;bottom:calc(var(--tg-safe-bottom,0px) + 28px);transform:translateX(-50%);background:var(--r-btn);color:var(--r-btn-fg);padding:10px 16px;border-radius:999px;font:500 14px var(--font)}
+.mark,.burger,.dots{transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .28s}
+body.up .mark,body.up .burger,body.up .dots{transform:translateY(-120px);opacity:0;pointer-events:none}
+.dots{transform:translateX(-50%)}body.up .dots{transform:translate(-50%,-120px)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head>
 <body>
@@ -91,10 +97,10 @@ const L = [
   after:['Собери доску из 4-5 картинок','Придумай, что их связывает: почему герой переходит из одного состояния в другое']},
  {t:'Какая нейросеть для чего', m:14, vk:'',
   intro:'Карта, по которой собран весь клип: что делать в Kling, что в Seedance, где дешевле. С ценами в кредитах. После урока ты будешь понимать, что делает твой режиссёр и почему.',
-  after:['Открой шпаргалку «Что где делать»','Найди в своей идее сцену, где нужна точность, и сцену, где нужна свобода'], files:['chto-gde','prompt']},
+  after:['Сохрани шпаргалку «Что где делать» ниже','Найди в своей идее сцену, где нужна точность, и сцену, где нужна свобода'], files:['chto-gde','prompt']},
  {t:'Готовим сцену к генерации', m:9, vk:'',
   intro:'Самый денежный урок. Семь ситуаций из клипа: что я загрузил в нейросеть и что получил. Здесь видно, почему кадр уходит от референса и как его удержать.',
-  after:['Открой шпаргалку «Что загружать»','Для первой сцены своего клипа реши, что пойдёт на вход: карточка героя, пустая локация или стартовый кадр'], files:['chto-zagruzhat']},
+  after:['Сохрани шпаргалку «Что загружать» ниже','Для первой сцены своего клипа реши, что пойдёт на вход: карточка героя, пустая локация или стартовый кадр'], files:['chto-zagruzhat']},
  {t:'Установка', m:22, vk:'',
   intro:'Ставим твоего режиссёра: Claude, скилл, ChatGPT и нейросети. Повторяй за мной клик в клик. Отложи на этот урок спокойный час, после него всё работает.',
   after:['Нажми «Получить скилл» ниже: бот пришлёт архив в чат','Дойди до проверки в конце урока: Claude рисует первый кадр'], files:['skill']},
@@ -135,6 +141,12 @@ function dots(){
  const el = document.getElementById('dots'); el.innerHTML = ''
  for (let i = 0; i < N; i++){ const d = document.createElement('i'); d.className = 'dot' + (i === S.pos ? ' on' : i < S.pos ? ' done' : ''); el.append(d) }
 }
+function inlineFile(k){
+ const f = F[k]
+ if (f.img) return `<div class="kicker" style="margin:4px 0 12px">${f.t}</div><img class="sheetimg" src="${f.img}" alt="${f.t}"><button class="secondary" data-save="${k}">Сохранить шпаргалку</button>`
+ if (f.txt) return `<div class="kicker" style="margin:4px 0 12px">${f.t}</div><div class="note"><pre class="prompt">${(PROMPT || 'Загружаю…').replace(/^# .*\n+/, '').replace(/```\n?/g, '').replace(/`/g, '').replace(/</g, '&lt;')}</pre></div><button class="secondary" data-copy="${k}">Скопировать промпт</button>`
+ return `<div class="files">${fileRow(k)}</div>`
+}
 function fileRow(k){ const f = F[k]; return `<button class="row" data-file="${k}">${doc}<span class="nm">${f.t}<small>${f.s}</small></span>${chev}</button>` }
 
 function render(){
@@ -159,7 +171,7 @@ function render(){
    <p class="lead">${l.intro}</p>
    ${video}
    <div class="note"><div class="kicker">После урока</div>${checks}</div>
-   ${l.files ? '<div class="files">' + l.files.map(fileRow).join('') + '</div>' : ''}
+   ${l.files ? l.files.map(inlineFile).join('') : ''}
    <button class="action" data-go="${p + 1}" data-done="${i}">${next}<i>${arrow}</i></button>
    <button class="secondary" data-go="${p - 1}">Назад</button>`
  } else {
@@ -171,7 +183,7 @@ function render(){
    <p class="prose" style="margin-top:22px">Хочешь как в моём клипе, с переходами, субтитрами и моушном? Соберём твой клип вместе на наставничестве.</p>
    <button class="secondary" data-link="${FIL}">Узнать про наставничество</button>`
  }
- el.innerHTML = '<div class="page">' + h + '</div>'; el.scrollTop = 0; dots()
+ el.innerHTML = '<div class="page">' + h + '</div>'; el.scrollTop = 0; lastY = 0; document.body.classList.remove('up'); dots()
 }
 
 function go(p){ S.pos = Math.max(0, Math.min(N - 1, p)); store.set(); render() }
@@ -212,7 +224,22 @@ document.addEventListener('click', e => {
  if (b.dataset.done !== undefined) S.done[b.dataset.done] = true
  haptic(b.classList.contains('action') ? 'medium' : 'light'); go(+b.dataset.go)
 })
+let PROMPT = ''
+fetch(F.prompt.txt).then(r => r.text()).then(t => { PROMPT = t; if (document.querySelector('.prompt')) render() })
+function promptOnly(){ const m = PROMPT.match(/```\n([\s\S]*?)```/); return m ? m[1].trim() : PROMPT }
+function save(k){ const f = F[k], url = new URL(f.img, location.href).href, name = f.img.split('/').pop()
+ haptic('light')
+ if (tg?.downloadFile) { try { tg.downloadFile({ url, file_name: name }); return } catch (e) {} }   // Telegram 8.0+: окно «Сохранить файл»
+ if (tg?.openLink) tg.openLink(url); else window.open(url, '_blank') }
+document.addEventListener('click', e => { const b = e.target.closest('[data-save],[data-copy]'); if (!b) return; e.preventDefault(); e.stopPropagation()
+ if (b.dataset.save) return save(b.dataset.save)
+ navigator.clipboard?.writeText(promptOnly()).then(() => toast('Промпт скопирован'), () => toast('Выдели текст и скопируй')) }, true)
 document.getElementById('burger').onclick = menu
+
+// шапка уезжает вверх, когда листаешь вниз, и возвращается, когда листаешь вверх
+let lastY = 0
+document.getElementById('screen').addEventListener('scroll', e => { const y = e.target.scrollTop
+ if (y > 40 && y > lastY + 4) document.body.classList.add('up'); else if (y < lastY - 4 || y < 40) document.body.classList.remove('up'); lastY = y }, { passive: true })
 
 // свайп как в онбординге Iter: |dx| ≥ 45 и горизонталь сильнее вертикали
 let sx = 0, sy = 0
@@ -224,6 +251,8 @@ addEventListener('touchend', e => { if (document.querySelector('.sheet,.viewer')
 // Telegram: как в main.tsx Iter
 if (tg){
  tg.ready(); tg.expand(); tg.disableVerticalSwipes?.()
+ const full = () => { try { if (!tg.isFullscreen) tg.requestFullscreen?.() } catch (e) {} }   // как в Iter: сразу на весь экран; старый Telegram кидает ошибку
+ full(); setTimeout(full, 400); addEventListener('touchend', full, { once: true })
  const dark = matchMedia('(prefers-color-scheme: dark)').matches, bg = dark ? '#17161A' : '#F6F4F1'
  tg.setHeaderColor?.(bg); tg.setBackgroundColor?.(bg); tg.setBottomBarColor?.(bg)
  const safe = () => { const a = tg.safeAreaInset || {}, c = tg.contentSafeAreaInset || {}, r = document.documentElement.style
