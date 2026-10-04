@@ -91,7 +91,7 @@ const CH = 'https://t.me/c/4477554381/'   // закрытый канал: ски
 const VK = {1: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239017&hash=460ebc1865a08bf6', 2: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239018&hash=2f73c375f2ebd4bf', 3: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239019&hash=64c6fa855fd726ff', 4: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239020&hash=e22358ec86a5c7e1', 5: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239021&hash=e7aa7dbcb9063f65', 6: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239022&hash=80c9fb335b4dc343'}   // плееры VK «по ссылке», урок 7 добавить после записи
 const L = [
  {t:'Как я слил подписку за вечер', m:7, vk:'',
-  intro:'Начинаем с моего провала. Я хотел снять клип за один вечер, закинул всё в Seedance одним промптом и слил половину кредитов. Посмотри, чтобы не платить за эту ошибку самому.',
+  intro:'Кто выпал из нейронок хотя бы на полгода, вообще не в курсе, до чего они дошли. А начинаем с моего провала: я хотел снять клип за один вечер, закинул всё в Seedance одним промптом и слил половину кредитов. Посмотри, чтобы не платить за эту ошибку самому.',
   after:['Собери в Pinterest 4-5 картинок, которые тебя цепляют. Они понадобятся во втором уроке']},
  {t:'Идея и сценарий', m:7, vk:'',
   intro:'Собираем твою идею. Как отобрать референсы, склеить их в одну историю и вместе с Claude разложить её на сцены. После урока у тебя будет идея, текст и раскадровка.',
@@ -155,10 +155,10 @@ function render(){
  if (p === 0){
   h = `<div class="kicker">Гайд · 7 уроков</div>
    <div class="title">${name ? 'Привет, ' + name + '.' : 'Привет.'}\nНачнём?</div>
-   <p class="lead">Около 1 часа 40 минут видео. Проходи по порядку: каждый урок опирается на предыдущий.</p>
+   <p class="lead">На прохождение гайда уйдёт около 1 часа 40 минут видео. Проходи по порядку: каждый урок опирается на предыдущий.</p>
    <p class="prose">После пятого урока у тебя на компьютере будет <b>свой режиссёр,</b> который генерит по твоим словам. После шестого ты сделаешь с ним первые сцены своего клипа.</p>
    <p class="prose">Под каждым уроком короткое задание. Отмечай галочки, я сохраню, где ты остановился.</p>
-   <button class="action" data-go="1">${lessonsDone() ? 'Продолжить' : 'Начать с урока 1'}<i>${arrow}</i></button>`
+   <button class="action" data-go="1">Начать<i>${arrow}</i></button>`
  } else if (p <= L.length){
   const i = p - 1, l = L[i]
   const v = VK[i + 1]
@@ -221,7 +221,8 @@ document.addEventListener('click', e => {
  if (b.dataset.link) return openLink(b.dataset.link)
  if (b.dataset.file) return openFile(b.dataset.file)
  if (b.dataset.jump) { haptic('light'); return go(+b.dataset.jump) }
- if (b.dataset.chk) { haptic('sel'); S.done[b.dataset.chk] = !S.done[b.dataset.chk]; store.set(); return render() }
+ if (b.dataset.chk) { haptic('sel'); const on = S.done[b.dataset.chk] = !S.done[b.dataset.chk]; store.set()
+   b.classList.toggle('on', on); b.querySelector('i').innerHTML = on ? check : ''; return }   // на месте, без перерисовки и прыжка
  if (b.dataset.done !== undefined) S.done[b.dataset.done] = true
  haptic(b.classList.contains('action') ? 'medium' : 'light'); go(+b.dataset.go)
 })
