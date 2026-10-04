@@ -110,7 +110,7 @@ const L = [
   after:['Сгенерируй первую сцену своего клипа до видео: кадр, правки словами, «го»','Пошло легко? Сделай ещё две сцены и попроси Claude собрать черновой монтаж']},
  {t:'Что дальше', m:10, vk:'',
   intro:'Последний урок. Режиссёр у тебя стоит, говорить с ним ты умеешь. Сейчас покажу, что отличает клип от набора сцен: переходы, текст в кадре, моушн.',
-  after:['Доведи свой клип до конца: все сцены и черновой монтаж','Пришли мне, что получилось. Мне правда интересно']},
+  after:['Собери 3-4 сцены своего клипа и сделай между ними хотя бы один переход: бесшовный из кадра в кадр или через перекрытие, как у паучихи','Добавь сверху один слой: текст в кадре или моушн, как в моих четырёх примерах','Сведи всё в черновой монтаж под музыку и пришли мне, что получилось. Мне правда интересно']},
 ]
 const F = {
  'chto-gde':{t:'Шпаргалка «Что где делать»', s:'какая нейросеть за что отвечает, с ценами', img:'files/chto-gde.png'},
@@ -164,7 +164,7 @@ function render(){
   const v = VK[i + 1]
   const video = v ? `<div class="video"><iframe src="${v}&hd=2&js_api=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock" allowfullscreen loading="lazy"></iframe></div>`
                      : `<div class="video"><div class="soon"><i><svg width="18" height="20" viewBox="0 0 20 22"><path d="M3 2l15 9-15 9z" fill="currentColor"/></svg></i>Видео появится здесь</div></div>`
-  const checks = l.after.map((a, j) => { const on = S.done[i + '.' + j]; const txt = /Пришли мне/.test(a) ? `<a href="${FIL}" data-link="${FIL}">${a}</a>` : a
+  const checks = l.after.map((a, j) => { const on = S.done[i + '.' + j]; const txt = /пришли мне/i.test(a) ? `<a href="${FIL}" data-link="${FIL}">${a}</a>` : a
     return `<button class="chk${on ? ' on' : ''}" data-chk="${i}.${j}"><i>${on ? check : ''}</i><span>${txt}</span></button>` }).join('')
   const next = i + 1 < L.length ? `Дальше: урок ${i + 2}` : 'Завершить гайд'
   h = `<div class="kicker">Урок ${i + 1} из ${L.length} · ${l.m} мин</div>
@@ -178,7 +178,7 @@ function render(){
  } else {
   h = `<div class="kicker">Гайд пройден</div>
    <div class="title">Ты прошёл\nвесь путь.</div>
-   <p class="lead">Режиссёр стоит, говорить с ним ты умеешь, первые сцены уже есть. Осталось довести клип до конца.</p>
+   <p class="lead">Режиссёр стоит, сцены с переходами уже есть. Дальше слой за слоем доводишь клип до конца.</p>
    <p class="prose">Пришли мне, что получилось. Самые сильные работы покажу у себя в канале.</p>
    <button class="action" data-link="${FIL}">Написать Филу<i>${arrow}</i></button>
    <p class="prose" style="margin-top:22px">Хочешь как в моём клипе, с переходами, субтитрами и моушном? Соберём твой клип вместе на наставничестве.</p>
