@@ -1,0 +1,18 @@
+# Промпт карточки персонажа
+
+Куда: Nano Banana (в kie это Nano Banana Pro, 18 кредитов). Прикладываешь картинку образа и своё фото лица.
+
+```
+Character reference sheet of the same person as in the attached image, one wide horizontal image on a seamless neutral grey studio background with soft even light, three panels side by side: (1) full body from the front, slightly low angle, confident stance; (2) full body from the back, the back of the outfit fully readable; (3) face close-up in 3/4, slightly from below, showing hair, skin and eyewear in detail, the top of the outfit at the bottom edge. [appearance]. Wardrobe: [garments, materials]. Identical person and outfit in all three panels. Photoreal, 35mm film still, soft natural grain. No text, no labels, no extra people, no props.
+```
+
+Что вписать:
+- `[appearance]`: возраст, волосы, что на лице (очки, грим, рога).
+- `[garments, materials]`: одежда и из чего она: кожа, пайетки, бархат.
+
+Правила, на которых я обжёгся:
+1. Одна карточка на один образ. Формат широкий, примерно 21:9.
+2. Фон ровный серый. Пятнистый фон потом пачкает видео.
+3. В панелях «спереди» и «сзади» кадр обрезан по подбородок. Лицо есть только на крупном плане, так нейросеть берёт его из одного места.
+4. Лицо берём со своего фото при ровном свете. С кадра с цветным светом цвет перетечёт в генерацию.
+5. Если нейросеть подменила лицо на чужое, крупный план делай отдельно: правка своего селфи (сменить выражение, одежду, фон), и приставь к двум панелям.

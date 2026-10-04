@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Клип словами</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+/* Стиль один в один из iter-miniapp (src/index.css): токены, SF-шрифт, kicker/заголовок/лид, кнопка-строка со стрелкой, точки онбординга, шит. */
+:root{--bg:#F6F4F1;--bg-alt:#E9E5E2;--surface:rgba(255,255,255,.45);--surface-solid:#F6F3F0;--line:rgba(160,155,145,.16);--line-strong:rgba(160,155,145,.28);
+--text:rgba(31,31,36,.9);--text2:rgba(31,31,36,.5);--muted:rgba(31,31,36,.32);--icon:rgba(31,31,36,.5);--ink:#2b2723;--ink-text:#F4F1EA;--overlay:rgba(31,31,36,.28);--sheet:#F6F3F0;
+--lav:#a28bbd;--note:#fcfaf7;--r-btn:#141316;--r-btn-fg:#f8f5f1;--r-t2:rgba(41,39,45,.56);--dots-bg:rgba(246,244,241,.74);--dot:rgba(31,31,36,.14);--dot-on:rgba(31,31,36,.68);
+--font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;--display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;--ease:cubic-bezier(.4,0,.2,1);color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#17161A;--bg-alt:#1E1D21;--surface:rgba(255,255,255,.05);--surface-solid:#232227;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.15);
+--text:rgba(245,242,236,.92);--text2:rgba(245,242,236,.55);--muted:rgba(245,242,236,.4);--icon:rgba(245,242,236,.6);--ink:#EEEAE4;--ink-text:#1A1917;--overlay:rgba(0,0,0,.55);--sheet:#232227;
+--lav:#b3a0d8;--note:#242426;--r-btn:#f1ede7;--r-btn-fg:#1a1917;--r-t2:rgba(245,242,236,.55);--dots-bg:rgba(23,22,26,.74);--dot:rgba(245,242,236,.16);--dot-on:rgba(245,242,236,.8);color-scheme:dark}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{position:fixed;inset:0;overflow:hidden;overscroll-behavior:none;height:100%;margin:0;background:var(--bg);color:var(--text)}
+body{font:15px/1.55 var(--font);letter-spacing:-.005em;-webkit-font-smoothing:antialiased}
+button{border:none;background:none;font:inherit;color:inherit;padding:0;cursor:pointer}
+a{color:inherit}
+.mark{position:fixed;top:calc(var(--tg-status-top,8px) + 18px);left:0;right:0;text-align:center;font:600 10px/1 var(--font);letter-spacing:.34em;text-indent:.34em;color:var(--r-t2);z-index:5;pointer-events:none}
+.burger{position:fixed;z-index:6;left:12px;top:calc(var(--tg-safe-top,12px) + 4px);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--text2)}
+.burger:active{background:var(--line)}
+.dots{position:fixed;z-index:5;top:calc(var(--tg-safe-top,12px) + 30px);left:50%;transform:translateX(-50%);display:flex;gap:6px;padding:6px 9px;border-radius:999px;background:var(--dots-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--dot);transition:width 260ms cubic-bezier(.2,.8,.2,1),background 260ms}
+.dot.on{width:18px;border-radius:999px;background:var(--dot-on)}
+.dot.done{background:var(--dot-on);opacity:.45}
+#screen{position:absolute;inset:0;overflow-y:auto;overscroll-behavior-y:contain;padding:calc(var(--tg-safe-top,12px) + 72px) 22px calc(var(--tg-safe-bottom,0px) + 34px)}
+.page{max-width:560px;margin:0 auto;animation:in .25s var(--ease)}
+@keyframes in{from{opacity:0}to{opacity:1}}
+.kicker{font:560 11px/1.2 var(--font);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.title{font:520 40px/1.03 var(--display);letter-spacing:-.05em;white-space:pre-line;margin:21px 0 22px}
+.lead{font:400 17px/1.55 var(--font);color:var(--text2);max-width:33ch;margin:0 0 24px}
+.prose{font:400 16.5px/1.62 var(--font);letter-spacing:-.01em;margin:0 0 20px}
+.prose b{font-weight:610}
+.video{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#141316;margin:0 0 26px}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video .soon{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:10px;color:rgba(248,245,241,.6);font:500 13.5px var(--font)}
+.video .soon i{width:52px;height:52px;border-radius:50%;background:rgba(248,245,241,.14);display:grid;place-items:center}
+.note{background:var(--note);border-radius:12px;padding:17px 18px 7px;margin:0 0 26px}
+.note .kicker{margin-bottom:12px}
+.chk{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;font:400 15.5px/1.45 var(--font);margin-bottom:12px}
+.chk i{flex:none;width:20px;height:20px;border-radius:6px;box-shadow:inset 0 0 0 1.2px var(--line-strong);margin-top:1px;display:grid;place-items:center;transition:background .2s var(--ease)}
+.chk.on i{background:var(--ink);box-shadow:none;color:var(--ink-text)}
+.chk.on span{color:var(--text2)}
+.chk a{border-bottom:1px solid var(--line-strong);text-decoration:none}
+.files{display:flex;flex-direction:column;margin:0 0 22px;border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 0;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.row .nm{flex:1;min-width:0;font:400 16px/1.35 var(--font);letter-spacing:-.024em}
+.row .nm small{display:block;font:400 13px/1.35 var(--font);color:var(--text2);letter-spacing:-.005em}
+.row svg{flex:none;color:var(--icon)}
+.row .n{flex:none;width:22px;font:400 13px var(--font);color:var(--muted);font-variant-numeric:tabular-nums}
+.row.cur .nm{font-weight:550}
+.row .tick{color:var(--text2)}
+.action{display:flex;align-items:center;gap:12px;min-height:62px;width:100%;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);padding:10px 0;margin:6px 0 8px;text-align:left;font:550 16px var(--font);color:var(--text)}
+.action i{display:grid;place-items:center;background:var(--r-btn);color:var(--r-btn-fg);border-radius:50%;width:36px;height:36px;margin-left:auto;flex:none;transition:transform .16s ease,opacity .16s ease}
+.action:active i{transform:scale(.92);opacity:.7}
+.secondary{display:block;min-height:44px;font:400 15px var(--font);color:var(--text2);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-color:var(--line-strong)}
+.overlay{position:fixed;inset:0;z-index:20;background:var(--overlay);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);animation:fade .16s ease}
+@keyframes fade{from{opacity:0}}
+.sheet{position:fixed;z-index:21;left:0;right:0;bottom:0;max-height:86%;overflow-y:auto;background:var(--sheet);border-radius:26px 26px 0 0;box-shadow:0 -18px 44px -16px rgba(0,0,0,.4);padding:10px 22px calc(var(--tg-safe-bottom,0px) + 24px);animation:up .22s cubic-bezier(.32,.72,0,1)}
+@keyframes up{from{transform:translateY(24px);opacity:0}}
+.grab{width:40px;height:5px;border-radius:5px;background:var(--line-strong);margin:0 auto 18px}
+.sheet h3{font:560 11px/1.2 var(--font);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.viewer{position:fixed;inset:0;z-index:30;background:var(--bg);overflow:auto;padding:calc(var(--tg-safe-top,12px) + 52px) 16px calc(var(--tg-safe-bottom,0px) + 24px);animation:fade .2s ease}
+.viewer img{width:100%;border-radius:10px;display:block}
+.viewer pre{white-space:pre-wrap;font:400 14.5px/1.55 var(--font);margin:0}
+.close{position:fixed;z-index:31;right:14px;top:calc(var(--tg-safe-top,12px) + 4px);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface-solid);color:var(--text2);box-shadow:inset 0 0 0 1px var(--line)}
+.toast{position:fixed;z-index:40;left:50%;bottom:calc(var(--tg-safe-bottom,0px) + 28px);transform:translateX(-50%);background:var(--r-btn);color:var(--r-btn-fg);padding:10px 16px;border-radius:999px;font:500 14px var(--font)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<div class="mark">КЛИП СЛОВАМИ</div>
+<button class="burger" id="burger" aria-label="Меню"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<div class="dots" id="dots"></div>
+<div id="screen"></div>
+<script>
+// ponytail: доступ не проверяем, страницу открывает бот после оплаты. Если ссылка утечёт, видно тексты и ссылки на видео; закрыть можно проверкой initData на сервере бота.
+const FIL = 'https://t.me/Seven_su'
+const BOT = 'https://t.me/klipslovami_bot'   // поменять на ник бота продаж
+const L = [
+ {t:'Как я слил подписку за вечер', m:7, vk:'',
+  intro:'Начинаем с моего провала. Я хотел снять клип за один вечер, закинул всё в Seedance одним промптом и слил половину кредитов. Посмотри, чтобы не платить за эту ошибку самому.',
+  after:['Собери в Pinterest 4-5 картинок, которые тебя цепляют. Они понадобятся во втором уроке']},
+ {t:'Идея и сценарий', m:7, vk:'',
+  intro:'Собираем твою идею. Как отобрать референсы, склеить их в одну историю и вместе с Claude разложить её на сцены. После урока у тебя будет идея, текст и раскадровка.',
+  after:['Собери доску из 4-5 картинок','Придумай, что их связывает: почему герой переходит из одного состояния в другое']},
+ {t:'Какая нейросеть для чего', m:14, vk:'',
+  intro:'Карта, по которой собран весь клип: что делать в Kling, что в Seedance, где дешевле. С ценами в кредитах. После урока ты будешь понимать, что делает твой режиссёр и почему.',
+  after:['Открой шпаргалку «Что где делать»','Найди в своей идее сцену, где нужна точность, и сцену, где нужна свобода'], files:['chto-gde','prompt']},
+ {t:'Готовим сцену к генерации', m:9, vk:'',
+  intro:'Самый денежный урок. Семь ситуаций из клипа: что я загрузил в нейросеть и что получил. Здесь видно, почему кадр уходит от референса и как его удержать.',
+  after:['Открой шпаргалку «Что загружать»','Для первой сцены своего клипа реши, что пойдёт на вход: карточка героя, пустая локация или стартовый кадр'], files:['chto-zagruzhat']},
+ {t:'Установка', m:22, vk:'',
+  intro:'Ставим твоего режиссёра: Claude, скилл, ChatGPT и нейросети. Повторяй за мной клик в клик. Отложи на этот урок спокойный час, после него всё работает.',
+  after:['Скачай скилл: он лежит в боте отдельным файлом','Дойди до проверки в конце урока: Claude рисует первый кадр'], files:['skill']},
+ {t:'Как работать с режиссёром', m:30, vk:'',
+  intro:'Режиссёр стоит у тебя на компьютере. Теперь учимся с ним разговаривать: что писать, куда он всё складывает, что делать, когда он ошибается, и как просить монтаж. Все фразы настоящие, из моей переписки по клипу.',
+  after:['Попроси у Claude один кадр своей первой сцены, пока без видео','Поправь его словами и скажи «го»']},
+ {t:'Что дальше', m:10, vk:'',
+  intro:'Последний урок. Режиссёр у тебя стоит, говорить с ним ты умеешь. Сейчас покажу, что отличает клип от набора сцен: переходы, текст в кадре, моушн.',
+  after:['Собери первые три сцены своего клипа','Пришли мне, что получилось. Мне правда интересно']},
+]
+const F = {
+ 'chto-gde':{t:'Шпаргалка «Что где делать»', s:'какая нейросеть за что отвечает, с ценами', img:'files/chto-gde.png'},
+ 'chto-zagruzhat':{t:'Шпаргалка «Что загружать»', s:'семь ситуаций: что положить на вход', img:'files/chto-zagruzhat.png'},
+ 'prompt':{t:'Промпт карточки персонажа', s:'копируешь и вписываешь свой образ', txt:'files/prompt-kartochki.txt'},
+ 'skill':{t:'Скилл-режиссёр', s:'лежит в боте отдельным файлом', url:BOT},
+}
+const N = L.length + 2   // приветствие, 7 уроков, финал
+const tg = window.Telegram?.WebApp
+const name = tg?.initDataUnsafe?.user?.first_name || ''
+let S = {pos:0, done:{}}
+
+// хранилище: облако Telegram, вне Telegram localStorage
+const store = {
+ get(cb){ const done = v => { try{ cb(v ? JSON.parse(v) : null) }catch(e){ cb(null) } }
+   if (tg?.CloudStorage && tg.initData) tg.CloudStorage.getItem('klip', (e, v) => done(e ? null : v))
+   else { let v=null; try{ v=localStorage.getItem('klip') }catch(e){} done(v) } },
+ set(){ const v = JSON.stringify(S)
+   if (tg?.CloudStorage && tg.initData) tg.CloudStorage.setItem('klip', v); else { try{ localStorage.setItem('klip', v) }catch(e){} } },
+}
+const haptic = k => { const f = tg?.HapticFeedback; k === 'sel' ? f?.selectionChanged?.() : f?.impactOccurred?.(k || 'light') }
+const arrow = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'
+const check = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+const chev = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>'
+const doc = '<svg width="16" height="18" viewBox="0 0 16 18" fill="none" stroke="currentColor"><rect x="3" y="2.5" width="10" height="13" rx="2"/></svg>'
+const lessonsDone = () => L.filter((_, i) => S.done[i]).length
+
+function dots(){
+ const el = document.getElementById('dots'); el.innerHTML = ''
+ for (let i = 0; i < N; i++){ const d = document.createElement('i'); d.className = 'dot' + (i === S.pos ? ' on' : i < S.pos ? ' done' : ''); el.append(d) }
+}
+function fileRow(k){ const f = F[k]; return `<button class="row" data-file="${k}">${doc}<span class="nm">${f.t}<small>${f.s}</small></span>${chev}</button>` }
+
+function render(){
+ const p = S.pos, el = document.getElementById('screen'); let h = ''
+ if (p === 0){
+  h = `<div class="kicker">Гайд · 7 уроков</div>
+   <div class="title">${name ? 'Привет, ' + name + '.' : 'Привет.'}\nНачнём?</div>
+   <p class="lead">Около 1 часа 40 минут видео. Проходи по порядку: каждый урок опирается на предыдущий.</p>
+   <p class="prose">После пятого урока у тебя на компьютере будет <b>свой режиссёр,</b> который генерит по твоим словам. После шестого ты сделаешь с ним первые сцены своего клипа.</p>
+   <p class="prose">Под каждым уроком короткое задание. Отмечай галочки, я сохраню, где ты остановился.</p>
+   <button class="action" data-go="1">${lessonsDone() ? 'Продолжить' : 'Начать с урока 1'}<i>${arrow}</i></button>`
+ } else if (p <= L.length){
+  const i = p - 1, l = L[i]
+  const video = l.vk ? `<div class="video"><iframe src="${l.vk}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`
+                     : `<div class="video"><div class="soon"><i><svg width="18" height="20" viewBox="0 0 20 22"><path d="M3 2l15 9-15 9z" fill="currentColor"/></svg></i>Видео появится здесь</div></div>`
+  const checks = l.after.map((a, j) => { const on = S.done[i + '.' + j]; const txt = /Пришли мне/.test(a) ? `<a href="${FIL}" data-link="${FIL}">${a}</a>` : a
+    return `<button class="chk${on ? ' on' : ''}" data-chk="${i}.${j}"><i>${on ? check : ''}</i><span>${txt}</span></button>` }).join('')
+  const next = i + 1 < L.length ? `Дальше: урок ${i + 2}` : 'Завершить гайд'
+  h = `<div class="kicker">Урок ${i + 1} из ${L.length} · ${l.m} мин</div>
+   <div class="title">${l.t}</div>
+   <p class="lead">${l.intro}</p>
+   ${video}
+   <div class="note"><div class="kicker">После урока</div>${checks}</div>
+   ${l.files ? '<div class="files">' + l.files.map(fileRow).join('') + '</div>' : ''}
+   <button class="action" data-go="${p + 1}" data-done="${i}">${next}<i>${arrow}</i></button>
+   <button class="secondary" data-go="${p - 1}">Назад</button>`
+ } else {
+  h = `<div class="kicker">Гайд пройден</div>
+   <div class="title">Ты прошёл\nвесь путь.</div>
+   <p class="lead">Режиссёр стоит, говорить с ним ты умеешь. Осталось собрать первые три сцены.</p>
+   <p class="prose">Пришли мне, что получилось. Самые сильные работы покажу у себя в канале.</p>
+   <button class="action" data-link="${FIL}">Написать Филу<i>${arrow}</i></button>
+   <p class="prose" style="margin-top:22px">Хочешь как в моём клипе, с переходами, субтитрами и моушном? Соберём твой клип вместе на наставничестве.</p>
+   <button class="secondary" data-link="${FIL}">Узнать про наставничество</button>`
+ }
+ el.innerHTML = '<div class="page">' + h + '</div>'; el.scrollTop = 0; dots()
+}
+
+function go(p){ S.pos = Math.max(0, Math.min(N - 1, p)); store.set(); render() }
+function openLink(u){ haptic('light'); if (tg?.openTelegramLink && u.startsWith('https://t.me/')) tg.openTelegramLink(u); else window.open(u, '_blank') }
+function toast(t){ const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.append(d); setTimeout(() => d.remove(), 1600) }
+
+function openFile(k){
+ const f = F[k]; if (f.url) return openLink(f.url)
+ haptic('sel'); const v = document.createElement('div'); v.className = 'viewer'
+ const close = document.createElement('button'); close.className = 'close'; close.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>'
+ close.onclick = () => { v.remove(); close.remove() }
+ if (f.img) v.innerHTML = `<div class="kicker" style="margin-bottom:14px">${f.t}</div><img src="${f.img}" alt="${f.t}">`
+ else fetch(f.txt).then(r => r.text()).then(t => {
+   v.innerHTML = `<div class="kicker" style="margin-bottom:14px">${f.t}</div><pre></pre><button class="action" id="copy">Скопировать промпт<i>${arrow}</i></button>`
+   v.querySelector('pre').textContent = t
+   v.querySelector('#copy').onclick = () => { const m = t.match(/```\n([\s\S]*?)```/); navigator.clipboard?.writeText(m ? m[1].trim() : t).then(() => toast('Скопировано'), () => toast('Выдели текст и скопируй')) } })
+ document.body.append(v, close)
+}
+
+function menu(){
+ haptic('sel'); const o = document.createElement('div'); o.className = 'overlay'; const s = document.createElement('div'); s.className = 'sheet'
+ s.innerHTML = '<div class="grab"></div><h3>Уроки</h3>' + L.map((l, i) =>
+   `<button class="row${S.pos === i + 1 ? ' cur' : ''}" data-jump="${i + 1}"><span class="n">${i + 1}</span><span class="nm">${l.t}<small>${l.m} мин</small></span>${S.done[i] ? '<span class="tick">' + check + '</span>' : chev}</button>`).join('')
+   + '<h3>Материалы</h3>' + ['skill', 'chto-gde', 'chto-zagruzhat', 'prompt'].map(fileRow).join('')
+   + `<h3>Связь</h3><button class="row" data-link="${FIL}"><span class="nm">Задать вопрос Филу<small>отвечаю сам, в личке</small></span>${chev}</button>`
+ const shut = () => { o.remove(); s.remove() }
+ o.onclick = shut; s.addEventListener('click', e => { if (e.target.closest('[data-jump],[data-file],[data-link]')) setTimeout(shut, 0) })
+ document.body.append(o, s)
+}
+
+document.addEventListener('click', e => {
+ const b = e.target.closest('[data-go],[data-chk],[data-file],[data-link],[data-jump]'); if (!b) return
+ e.preventDefault()
+ if (b.dataset.link) return openLink(b.dataset.link)
+ if (b.dataset.file) return openFile(b.dataset.file)
+ if (b.dataset.jump) { haptic('light'); return go(+b.dataset.jump) }
+ if (b.dataset.chk) { haptic('sel'); S.done[b.dataset.chk] = !S.done[b.dataset.chk]; store.set(); return render() }
+ if (b.dataset.done !== undefined) S.done[b.dataset.done] = true
+ haptic(b.classList.contains('action') ? 'medium' : 'light'); go(+b.dataset.go)
+})
+document.getElementById('burger').onclick = menu
+
+// свайп как в онбординге Iter: |dx| ≥ 45 и горизонталь сильнее вертикали
+let sx = 0, sy = 0
+addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY }, {passive:true})
+addEventListener('touchend', e => { if (document.querySelector('.sheet,.viewer')) return
+ const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy
+ if (Math.abs(dx) >= 45 && Math.abs(dx) > Math.abs(dy) * 1.2) { haptic('light'); go(S.pos + (dx < 0 ? 1 : -1)) } }, {passive:true})
+
+// Telegram: как в main.tsx Iter
+if (tg){
+ tg.ready(); tg.expand(); tg.disableVerticalSwipes?.()
+ const dark = matchMedia('(prefers-color-scheme: dark)').matches, bg = dark ? '#17161A' : '#F6F4F1'
+ tg.setHeaderColor?.(bg); tg.setBackgroundColor?.(bg); tg.setBottomBarColor?.(bg)
+ const safe = () => { const a = tg.safeAreaInset || {}, c = tg.contentSafeAreaInset || {}, r = document.documentElement.style
+   r.setProperty('--tg-safe-top', ((a.top || 0) + (c.top || 0) + 12) + 'px'); r.setProperty('--tg-status-top', ((a.top || 0) + 8) + 'px'); r.setProperty('--tg-safe-bottom', (a.bottom || 0) + 'px') }
+ safe(); ['safeAreaChanged', 'contentSafeAreaChanged', 'fullscreenChanged'].forEach(ev => tg.onEvent?.(ev, safe))
+}
+const qp = new URLSearchParams(location.search).get('p')   // ?p=3 открывает экран сразу, для проверки
+store.get(v => { if (v) S = Object.assign(S, v); if (qp) S.pos = +qp; render() })
+</script>
+</body></html>
