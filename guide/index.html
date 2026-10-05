@@ -49,7 +49,7 @@ a.btn{text-decoration:none}</style>
 <p><strong>Как я делаю клипы нейросетями, не заходя ни в один интерфейс,
 и трачу на генерации вдвое меньше</strong></p>
 <figure>
-<video src="media/01_klip.mp4" autoplay muted loop playsinline preload="auto" poster=""><a
+<video src="media/01_klip.mp4" autoplay muted loop playsinline preload="metadata" poster="media/01_klip_p.jpg"><a
 href="media/01_klip.mp4">Первые 14 секунд клипа</a></video>
 <figcaption aria-hidden="true">Первые 14 секунд клипа</figcaption>
 </figure>
@@ -92,7 +92,7 @@ Creators.</strong> Так что старый способ я знаю изну�
 ждал кино.</p>
 <p>Вот что получил:</p>
 <figure>
-<video src="media/02_do_oba.mp4" autoplay muted loop playsinline preload="auto" poster=""><a
+<video src="media/02_do_oba.mp4" autoplay muted loop playsinline preload="metadata" poster="media/02_do_oba_p.jpg"><a
 href="media/02_do_oba.mp4">Слева Wan: 18 секунд листает мои картинки как
 слайды, 454 кредита. Справа Seedance: те же картинки одна за другой,
 весь сюжет в 8 секундах, 504 кредита</a></video>
@@ -110,7 +110,7 @@ href="media/02_do_oba.mp4">Слева Wan: 18 секунд листает мои
 каждую сцену. Сначала идеальные картинки, и только потом видео.</p>
 </div>
 <figure>
-<video src="media/04_posle.mp4" autoplay muted loop playsinline preload="auto" poster=""><a
+<video src="media/04_posle.mp4" autoplay muted loop playsinline preload="metadata" poster="media/04_posle_p.jpg"><a
 href="media/04_posle.mp4">Та же сцена в финальном клипе: карточка героя,
 пустая локация, Seedance, 336 кредитов за лучший дубль</a></video>
 <figcaption aria-hidden="true">Та же сцена в финальном клипе: карточка
@@ -320,7 +320,7 @@ $</strong> на генерации, кредиты не сгорают.</p>
 улетают.</p>
 <a class="btn" href="https://t.me/klipslovami_bot">Купить гайд за 2 990 ₽</a>
 <h2>Следи за мной в Telegram</h2><p>В моём <a href="https://t.me/artistcreatorr">Telegram-канале</a> разборы нейросетей, закулисье клипов и все мои новые продукты. Там они появляются первыми.</p><p style="opacity:.6;font-size:14px;margin-top:40px">Оплачивая гайд, ты принимаешь <a href="https://teletype.in/@seven_su/klip-slovami-oferta">условия оферты</a>.</p><a class="stick" href="https://t.me/klipslovami_bot">Купить гайд · 2 990 ₽</a>
-<style>.stick{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:616px;margin:0 auto;display:block;text-align:center;background:var(--sun);color:var(--ink);font:400 26px/1 var(--display);letter-spacing:.03em;padding:17px 16px 14px;border-radius:3px;text-decoration:none;box-shadow:0 8px 30px rgba(0,0,0,.55);transform:translateY(160%);transition:transform .35s ease}.stick.on{transform:none}
+<style>.stick{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:616px;margin:0 auto;display:block;text-align:center;background:rgba(13,12,11,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--sun);border:1px solid rgba(255,212,0,.55);font:400 22px/1 var(--display);letter-spacing:.04em;padding:15px 16px 12px;border-radius:3px;text-decoration:none;transform:translateY(160%);transition:transform .35s ease}.stick.on{transform:none}
 @media (prefers-reduced-motion:reduce){.stick{transition:none}}</style>
-<script>(()=>{const s=document.querySelector('.stick'),f=()=>{const y=scrollY,end=document.documentElement.scrollHeight-innerHeight-500;s.classList.toggle('on',y>innerHeight*.8&&y<end)};addEventListener('scroll',f,{passive:true});f()})()</script></body>
+<script>(()=>{const s=document.querySelector('.stick'),t=[...document.querySelectorAll('h2')].find(e=>/Как процесс/.test(e.textContent)),f=()=>{const start=t?t.offsetTop-innerHeight*.5:innerHeight;const y=scrollY,end=document.documentElement.scrollHeight-innerHeight-500;s.classList.toggle('on',y>start&&y<end)};addEventListener('scroll',f,{passive:true});f()})()</script></body>
 </html>
