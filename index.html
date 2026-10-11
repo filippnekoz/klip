@@ -116,7 +116,15 @@ const L = [
   after:['Сохрани шпаргалку «Что загружать» ниже','Для первой сцены своего клипа реши, что пойдёт на вход: карточка героя, пустая локация или стартовый кадр'], files:['chto-zagruzhat']},
  {t:'Установка', m:22, vk:'',
   intro:'Ставим твоего режиссёра: Claude, скилл, ChatGPT и нейросети. Повторяй за мной клик в клик. Отложи на этот урок спокойный час, после него всё работает.',
-  after:['Нажми «Получить скилл-режиссёр» ниже и скачай архив из закрытого канала','Дойди до проверки в конце урока: Claude рисует первый кадр'], files:['skill']},
+  after:['Нажми «Получить скилл-режиссёр» ниже и скачай архив из закрытого канала','Дойди до проверки в конце урока: Claude рисует первый кадр'], files:['skill'],
+  links:[['Claude', 'регистрация и подписка Pro, 20 $ в месяц', 'https://claude.ai'],
+   ['ChatGPT', 'подписка Plus для картинок, 20 $ в месяц', 'https://chatgpt.com'],
+   ['VS Code', 'бесплатно, окно, в котором живёт Claude', 'https://code.visualstudio.com/download'],
+   ['Claude Code для VS Code', 'расширение от Anthropic, ставится внутри VS Code', 'https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code'],
+   ['Google Chrome', 'бесплатно, через него Claude рисует в твоём ChatGPT', 'https://www.google.com/chrome/'],
+   ['kie.ai', 'видео и музыка, от 5 $, без подписки', 'https://kie.ai'],
+   ['fal.ai', 'финальное качество и звуки, от 5 $', 'https://fal.ai'],
+   ['Если Claude не открывается', 'видео «Claude Code работает из России»', 'https://www.youtube.com/watch?v=cIRf2e7CkQ8']]},
  {t:'Как работать с режиссёром', m:30, vk:'',
   intro:'Режиссёр стоит у тебя на компьютере. Теперь учимся с ним разговаривать: что писать, куда он всё складывает, что делать, когда он ошибается, и как просить монтаж. Все фразы настоящие, из моей переписки по клипу.',
   after:['Сгенерируй первую сцену своего клипа до видео: кадр, правки словами, «го»','Пошло легко? Сделай ещё две сцены и попроси Claude собрать черновой монтаж']},
@@ -185,6 +193,7 @@ function render(){
    ${video}
    <div class="note"><div class="kicker">После урока</div>${checks}</div>
    ${l.files ? l.files.map(inlineFile).join('') : ''}
+   ${l.links ? `<div class="kicker" style="margin:4px 0 12px">Ссылки для установки</div><div class="files">${l.links.map(([t, d, u]) => `<button class="row" data-link="${u}"><span class="nm">${t}<small>${d}</small></span>${chev}</button>`).join('')}</div>` : ''}
    <button class="action" data-go="${p + 1}" data-done="${i}">${next}<i>${arrow}</i></button>
    <button class="secondary" data-go="${p - 1}">Назад</button>`
  } else {
@@ -200,7 +209,7 @@ function render(){
 }
 
 function go(p){ S.pos = Math.max(0, Math.min(N - 1, p)); store.set(); render() }
-function openLink(u){ haptic('light'); if (tg?.openTelegramLink && u.startsWith('https://t.me/')) tg.openTelegramLink(u); else window.open(u, '_blank') }
+function openLink(u){ haptic('light'); if (tg?.openTelegramLink && u.startsWith('https://t.me/')) tg.openTelegramLink(u); else if (tg?.openLink) tg.openLink(u); else window.open(u, '_blank') }
 function toast(t){ const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.append(d); setTimeout(() => d.remove(), 1600) }
 
 function openFile(k){
