@@ -99,7 +99,7 @@ const LEADS = {
 const LEAD = k => 'https://t.me/Seven_su?text=' + encodeURIComponent(LEADS[k])   // сразу чат с Филом, сообщение уже набрано
 const FIL = 'https://t.me/klipslovami_bot?start=support'   // вопросы: отвечает помощник в боте, Фил только по делу
 const BOT = 'https://t.me/klipslovami_bot'
-const CH = 'https://t.me/c/4477554381/'   // закрытый канал: скилл и новости для тех, кто оплатил
+const BOT = 'https://t.me/klipslovami_bot'   // скилл присылает бот файлом: проверяет оплату, каналы не нужны
 const VK = {1: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239017&hash=460ebc1865a08bf6', 2: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239018&hash=2f73c375f2ebd4bf', 3: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239019&hash=64c6fa855fd726ff', 4: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239020&hash=e22358ec86a5c7e1', 5: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239021&hash=e7aa7dbcb9063f65', 6: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239022&hash=80c9fb335b4dc343', 7: 'https://vkvideo.ru/video_ext.php?oid=-242013339&id=456239023&hash=6b9df07af631a115'}   // плееры VK «по ссылке»
 const L = [
  {t:'Как я слил подписку за вечер', m:7, vk:'',
@@ -116,7 +116,7 @@ const L = [
   after:['Сохрани шпаргалку «Что загружать» ниже','Для первой сцены своего клипа реши, что пойдёт на вход: карточка героя, пустая локация или стартовый кадр'], files:['chto-zagruzhat']},
  {t:'Установка', m:22, vk:'',
   intro:'Ставим твоего режиссёра: Claude, скилл, ChatGPT и нейросети. Повторяй за мной клик в клик. Отложи на этот урок спокойный час, после него всё работает.',
-  after:['Нажми «Получить скилл-режиссёр» ниже и скачай архив из закрытого канала','Дойди до проверки в конце урока: Claude рисует первый кадр'], files:['skill'],
+  after:['Нажми «Получить скилл-режиссёр» ниже: бот пришлёт архив прямо в чат','Дойди до проверки в конце урока: Claude рисует первый кадр'], files:['skill'],
   links:[['Claude', 'регистрация и подписка Pro, 20 $ в месяц', 'https://claude.ai'],
    ['ChatGPT', 'подписка Plus для картинок, 20 $ в месяц', 'https://chatgpt.com'],
    ['VS Code', 'бесплатно, окно, в котором живёт Claude', 'https://code.visualstudio.com/download'],
@@ -139,7 +139,7 @@ const F = {
  'chto-gde':{t:'Шпаргалка «Что где делать»', s:'какая нейросеть за что отвечает, с ценами', img:'files/chto-gde.png'},
  'chto-zagruzhat':{t:'Шпаргалка «Что загружать»', s:'семь ситуаций: что положить на вход', img:'files/chto-zagruzhat.png'},
  'prompt':{t:'Промпт карточки персонажа', s:'копируешь и вписываешь свой образ', txt:'files/prompt-kartochki.txt'},
- 'skill':{t:'Получить скилл-режиссёр', s:'архив в закрытом канале, скачай оттуда', url:CH + '11'},
+ 'skill':{t:'Получить скилл-режиссёр', s:'бот пришлёт архив файлом в чат', url:BOT + '?start=skill'},
 }
 const N = L.length + 2   // приветствие, 7 уроков, финал
 const tg = window.Telegram?.WebApp
